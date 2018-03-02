@@ -1,0 +1,22 @@
+version: '2'
+services:
+    redis-proxy:
+      build: .
+      image: segment_redis_proxy:latest
+      depends_on:
+          - redis
+      networks:
+          - solution
+      ports:
+          - "8080:8080"
+      env_file:
+          - .env
+
+    redis:
+      image: redis:latest
+      networks:
+          - solution
+
+networks:
+  solution:
+    driver: bridge
