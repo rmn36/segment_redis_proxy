@@ -1,7 +1,7 @@
 # HELP
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-.PHONY: help
+.PHONY: help test
 
 help: ## This is helpful
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -24,3 +24,6 @@ rmi: stop rm ## Removes image
 	docker rmi segment_redis_proxy
 
 clean: rmi ## Cleans out Docker artifacts
+
+test: ## Runs test env	
+	cd test/ ; docker-compose up --build -d redis-proxy 
