@@ -3,7 +3,6 @@ services:
     redis-proxy:
       build: 
         context: ../
-        dockerfile: ../Dockerfile
       image: segment_redis_proxy:latest
       depends_on:
           - redis
