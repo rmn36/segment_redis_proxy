@@ -11,10 +11,10 @@ import (
 	"strconv"
 	"time"
 )
-var max_connections = 10
-var cache_size = 10
+var maxConnections = 10
+var cacheSize = 10
 var cache_expiry = 60000
-var redis_url = "redis:6379"
+var redisUrl = "redis:6379"
 var port = "8080"
 var redisPool *redis.Pool
 var cache *ccache.Cache
@@ -123,18 +123,18 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 func readConfigs(){
 	var conn_parse_err error
-	max_connections, conn_parse_err := strconv.Atoi(os.Getenv("MAX_CONNECTIONS"))
+	maxConnections, conn_parse_err := strconv.Atoi(os.Getenv("MAX_CONNECTIONS"))
 	if conn_parse_err != nil {
 		panic("MAX_CONNECTIONS MUST BE A NUMBER")
 	}
-	log.Println("MAX CONNECTIONS: "+strconv.Itoa(max_connections))
+	log.Println("MAX CONNECTIONS: "+strconv.Itoa(maxConnections))
 
 	var cache_parse_err error
-	cache_size, cache_parse_err := strconv.Atoi(os.Getenv("CACHE_SIZE"))
+	cacheSize, cache_parse_err := strconv.Atoi(os.Getenv("CACHE_SIZE"))
 	if cache_parse_err != nil {
 		panic("CACHE_SIZE MUST BE A NUMBER")
 	}
-	log.Println("CACHE SIZE: "+strconv.Itoa(cache_size))
+	log.Println("CACHE SIZE: "+strconv.Itoa(cacheSize))
 
 	var cache_exp_parse_err error
 	cache_expiry, cache_exp_parse_err = strconv.Atoi(os.Getenv("CACHE_EXPIRY_TIME"))
@@ -143,17 +143,16 @@ func readConfigs(){
 	}
 	log.Println("CACHE EXPIRY TIME (ms): "+strconv.Itoa(cache_expiry))
 
-	redis_url = os.Getenv("REDIS_URL")
-	log.Println("REDIS URL: "+redis_url)
+	redisUrl = os.Getenv("REDIS_URL")
+	log.Println("REDIS URL: "+redisUrl)
 	port = os.Getenv("PORT")
 	log.Println("LISTENING PORT: "+port)
 }
 
 func createRedisPool() *redis.Pool {
 	pool := &redis.Pool{
-		// Other pool configuration not shown in this example.
 		Dial: func () (redis.Conn, error) {
-		  c, err := redis.Dial("tcp", redis_url)
+		  c, err := redis.Dial("tcp", redisUrl)
 		  if err != nil {
 			return nil, err
 		  }
@@ -169,7 +168,7 @@ func createRedisPool() *redis.Pool {
         return err
     }
 
-	pool.MaxActive = max_connections
+	pool.MaxActive = maxConnections
 	pool.IdleTimeout = time.Second * 10
 	return pool
 }
@@ -177,7 +176,7 @@ func createRedisPool() *redis.Pool {
 func main() {
 	readConfigs()
 	redisPool = createRedisPool()
-	cache = ccache.New(ccache.Configure().MaxSize(int64(cache_size)).ItemsToPrune(1).GetsPerPromote(1))
+	cache = ccache.New(ccache.Configure().MaxSize(int64(cacheSize)).ItemsToPrune(1).GetsPerPromote(1))
 
 	http.HandleFunc("/set", setHandler)
 	http.HandleFunc("/get", getHandler)
@@ -190,4 +189,5 @@ func main() {
 	}
 
 	log.Println("Server ended on port "+port)
+	redisPool.close()
 }

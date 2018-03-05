@@ -12,10 +12,10 @@ build: ## Build the container
 	docker-compose build --no-cache redis-proxy
 
 up: ## Build and run the container
-	docker-compose up --build -d redis-proxy 
+	docker-compose up -d redis-proxy 
 
 stop: ## Stop and remove a running container
-	docker-compose down
+	docker-compose down -v
 
 rm: stop ## Stop and remove running containers
 	docker-compose rm redis-proxy
@@ -26,4 +26,4 @@ rmi: stop rm ## Removes image
 clean: rmi ## Cleans out Docker artifacts
 
 test: ## Runs test env	
-	cd test/ ; docker-compose up --build -d redis-proxy 
+	cd test/ ; docker-compose up -d redis-proxy 
