@@ -1,1 +1,6 @@
-Redis Proxy Server
+#Redis Proxy Server
+##Overview
+This is a HTTP proxy server for a Redis instance built for the Segment coding interview. Going into this project I had written half the number of lines of golang as there are in this project. I had very little knowledge of the language and hadn't built an API with it at all. This made this project a great learning experience and gave me the opportunity to show off my software development skills, as well as my ability to pick up new languages and technologies very quickly. 
+
+##Project Structure
+The Dockerfile and docker-compose.yml at the root of the project build the proxy image and are there to run a "production" version of the proxy container (one without a pre-made backing Redis instance). Inside the `test/` dir there is another docker-compose file that includes an Redis backing instance for easier testing of the proxy. To run the production version simply run `make build` then `make run` from the root directory. To run the test instance, with sample curls, run `make test` from the root dir. Alternatively, to run either version `cd` to the dir where the docker-compose.yml file is that you wish to run and use `docker-compose up -d` to run the container(s).

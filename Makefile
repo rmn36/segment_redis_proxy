@@ -11,7 +11,7 @@ help: ## This is helpful
 build: ## Build the container
 	docker-compose build --no-cache redis-proxy
 
-up: ## Build and run the container
+run: ## Build and run the container
 	docker-compose up -d redis-proxy 
 
 stop: ## Stop and remove a running container
