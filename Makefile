@@ -26,4 +26,7 @@ rmi: stop rm ## Removes image
 clean: rmi ## Cleans out Docker artifacts
 
 test: ## Runs test env	
-	cd test/ ; docker-compose up -d redis-proxy 
+	cd scripts/ ; ./test.sh
+
+test_down:
+	cd test/ ; docker-compose down -v
